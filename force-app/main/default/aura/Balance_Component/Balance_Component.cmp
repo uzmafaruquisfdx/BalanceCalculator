@@ -1,0 +1,80 @@
+<aura:component description="Balance Calculator" controller="BalanceCalculatorService" 
+                implements="flexipage:availableForAllPageTypes,force:appHostable" access="global">
+    
+    <!-- Aura Variables -->
+    <aura:attribute name="id" type="integer" />
+    <aura:attribute name="creditorName" type="string" />
+    <aura:attribute name="firstName" type="string" />
+    <aura:attribute name="lastName" type="string" />
+    <aura:attribute name="minPaymentPercentage" type="double" default="0.00"/>
+    <aura:attribute name="balance" type="double" />
+    
+    <!-- Aura Page Load and Processing Sprinner -->
+    <aura:attribute name="spinner" type="boolean" default="false" />
+    
+    <!-- Page Load Initialization Method & Handlers-->
+    <aura:handler name="init" value="{! this }" action="{! c.onLoad }"/>
+    
+    <!-- Processing attributes -->
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    
+    <!-- List Attributes -->
+    <aura:attribute name="balList" type="object[]" />
+    <aura:attribute name="selectedRowsInfo" type="object[]" />
+    <aura:attribute name="demoColumns" type="list" />
+    
+    <!-- Table attributes -->
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" default="0"/>
+    <aura:attribute name="selectedRows" type="list"/>
+    <aura:attribute name="total" type="currency" default = "0.00"/>
+    
+    <aura:if isTrue="{!not(empty(v.balList))}">        
+        <div >
+            <lightning:datatable
+                                 columns="{!v.demoColumns }"
+                                 data="{!v.balList }"
+                                 keyField="id" 
+                                 selectedRows="{!v.selectedRows}" 
+                                 onrowselection="{!c.handleSelect}"
+                                 />
+        </div>
+    </aura:if>
+    
+    <div class="slds-m-top_small slds-m-bottom_medium">
+        <lightning:button variant="brand" label="Add Debt" title="Primary action" onclick="{!c.addRow}" class="slds-m-left_x-small"></lightning:button>
+        <lightning:button variant="brand" label="Remove Debt" title="Primary action" onclick="{!c.doDelete}"  class="slds-m-left_x-small"></lightning:button>
+        
+    </div>
+    <div class="slds-box slds-box_small" id="pop1" style="background-color:SlateBlue;">
+        <table>
+            <tr>               
+                <td><b>Total</b></td>
+                <div class="slds-grid slds-grid--align-end">
+                    <!-- <td ><b>${!v.total}</b></td> -->
+                    <td ><b>$<lightning:formattedNumber value="{!v.total}" style="decimal" minimumFractionDigits="2"/></b></td>
+                    
+                </div>
+            </tr>
+        </table>
+    </div>
+    <div class="slds-m-top_small slds-m-bottom_medium">
+        <b> Total row Count: &nbsp;{!v.totalNumberOfRows}&nbsp; &nbsp; Total Check Count: {!v.selectedRowsCount}</b>
+    </div>
+    
+    <!-- Loading Spinner Starts -->    
+    
+    <aura:if isTrue="{!v.spinner}">
+        <div class="demo-only" style="height:6rem">
+            <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+</aura:component>
